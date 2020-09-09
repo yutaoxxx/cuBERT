@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(cuBERT VERSION 0.0.5 LANGUAGES C CXX)
 
+#set(变量名 变量值)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
