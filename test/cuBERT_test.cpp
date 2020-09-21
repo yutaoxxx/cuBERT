@@ -16,6 +16,7 @@ protected:
 };
 
 void random_input(int* input_ids, int8_t* input_mask, int8_t* segment_ids, size_t length) {
+    //随机数生成器
     std::random_device r;
     std::default_random_engine e(r());
 
