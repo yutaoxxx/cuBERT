@@ -22,6 +22,7 @@ namespace cuBERT {
         }
         std::cerr << "Found GPU count: " << count << std::endl;
 #else
+        //cpu的核心数量
         char *cpu_models = std::getenv("CUBERT_NUM_CPU_MODELS");
         int count = cpu_models == nullptr ? 1 : std::atoi(cpu_models);
         std::cerr << "Found CPU CUBERT_NUM_CPU_MODELS: " << count << std::endl;
@@ -31,7 +32,7 @@ namespace cuBERT {
             auto start = std::chrono::high_resolution_clock::now();
             cuBERT::set_gpu(device);
             cuBERT::gpu_info(device);
-
+            //开启多个bert模型的实例
             auto *bert = new Bert<T>(graph.var, max_batch_size, seq_length,
                                      graph.vocab_size,
                                      graph.type_vocab_size,
