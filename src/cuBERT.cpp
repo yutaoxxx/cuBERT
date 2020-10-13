@@ -33,22 +33,33 @@ void *cuBERT_open(const char *model_file,
                   int num_attention_heads,
                   cuBERT_ComputeType compute_type) {
     if (compute_type == cuBERT_COMPUTE_FLOAT) {
+        //非半精度返回 cuBERT::BertM<float>对象
         return new cuBERT::BertM<float>(model_file,
                                         max_batch_size,
                                         seq_length,
                                         num_hidden_layers, num_attention_heads);
     } else {
 #ifdef HAVE_CUDA
+        //有CUDA的时候 返回 cuBERT::BertM<half>对象
         return new cuBERT::BertM<half>(model_file,
                                        max_batch_size,
                                        seq_length,
                                        num_hidden_layers, num_attention_heads);
 #else
+        //没有CUDA的时候  抛出异常，半精度不支持CPU
         throw std::invalid_argument("half precision not supported by CPU");
 #endif
     }
 }
 
+/* bert正向传播计算
+ * model    模型的指针
+ * batch_size    batch_size
+ * input_ids     输入的ids           int指针
+ * input_mask    输入的mask          int8_t指针
+ * segment_ids   输入的segment_ids   int8_t指针
+ * output        输出序列             void指针
+ */
 void cuBERT_compute(void *model,
                     int batch_size,
                     int *input_ids,
@@ -58,6 +69,7 @@ void cuBERT_compute(void *model,
                     cuBERT_OutputType output_type,
                     cuBERT_ComputeType compute_type) {
     if (compute_type == cuBERT_COMPUTE_FLOAT) {
+        //调用cuBERT::BertM里面的compute函数
         ((cuBERT::BertM<float> *) model)->compute(batch_size,
                                                   input_ids, input_mask, segment_ids,
                                                   (float*) output, output_type);
@@ -81,6 +93,7 @@ void cuBERT_compute_m(void* model,
                       cuBERT_ComputeType compute_type,
                       int output_to_float) {
     if (compute_type == cuBERT_COMPUTE_FLOAT) {
+        // 传参不同  output_to_float
         ((cuBERT::BertM<float> *) model)->compute(batch_size,
                                                   input_ids, input_mask, segment_ids,
                                                   output, output_to_float);
@@ -94,9 +107,12 @@ void cuBERT_compute_m(void* model,
 #endif
     }
 }
-
+/* 释放bertmodel的内存
+ *
+ */
 void cuBERT_close(void *model, cuBERT_ComputeType compute_type) {
     if (compute_type == cuBERT_COMPUTE_FLOAT) {
+        //直接删除这个指针
         delete (cuBERT::BertM<float> *) model;
     } else {
 #ifdef HAVE_CUDA
@@ -106,11 +122,11 @@ void cuBERT_close(void *model, cuBERT_ComputeType compute_type) {
 #endif
     }
 }
-
+// 返回一个tokenizer分词器
 void* cuBERT_open_tokenizer(const char* vocab_file, int do_lower_case) {
     return new cuBERT::FullTokenizer(vocab_file, do_lower_case);
 }
-
+// 释放掉分词器
 void cuBERT_close_tokenizer(void* tokenizer) {
     delete (cuBERT::FullTokenizer *) tokenizer;
 }
