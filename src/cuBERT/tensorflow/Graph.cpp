@@ -10,8 +10,11 @@
 namespace cuBERT {
 
     template <typename T>
+    // 计算图
     Graph<T>::Graph(const char *filename) {
+        // 输入模型pd文件
         std::ifstream input(filename);
+        //参数检查
         if (!input) {
             // try to check file exist
             // https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
@@ -22,6 +25,7 @@ namespace cuBERT {
         input.close();
 
         std::string buffer = stream.str();
+        //读取这个pd文件
         Tensorflow__GraphDef *graphDef = tensorflow__graph_def__unpack(nullptr, buffer.size(), (const uint8_t*) buffer.c_str());
         std::cerr << "model loaded from: " << filename << std::endl;
 
