@@ -7,7 +7,7 @@
 #include "cuBERT/common.h"
 #include "cuBERT/tokenization.h"
 #include "cuBERT/BertM.h"
-
+//初始化
 void cuBERT_initialize() {
     cuBERT::initialize();
 }
@@ -15,11 +15,11 @@ void cuBERT_initialize() {
 void cuBERT_finalize() {
     cuBERT::finalize();
 }
-
+//获得gpu的数量
 int cuBERT_get_gpu_count() {
     return cuBERT::get_gpu_count();
 }
-
+//打开一个bert，返回一个bert对象
 void *cuBERT_open(const char *model_file,
                   int max_batch_size,
                   int seq_length,
