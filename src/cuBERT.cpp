@@ -19,7 +19,13 @@ void cuBERT_finalize() {
 int cuBERT_get_gpu_count() {
     return cuBERT::get_gpu_count();
 }
-//打开一个bert，返回一个bert对象
+// 打开一个bert，返回一个bert对象
+// model_file  模型文件
+// max_batch_size      最大的batch_size
+// seq_length          序列长度
+// num_hidden_layers   bert的层数
+// num_attention_heads attention头的个数
+// cuBERT_ComputerType bert计算的类别
 void *cuBERT_open(const char *model_file,
                   int max_batch_size,
                   int seq_length,
